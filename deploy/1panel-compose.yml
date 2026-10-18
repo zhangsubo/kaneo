@@ -1,0 +1,58 @@
+# 1Panel Docker Compose 编排模板（容器 -> 编排 -> 创建编排）
+# 镜像地址：ghcr.io/zhangsubo/kaneo:latest（由 GitHub Actions 自动构建 linux/amd64）
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kaneo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-kaneo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?请设置 POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-kaneo}
+    volumes:
+      - kaneo_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kaneo:
+    image: ghcr.io/zhangsubo/kaneo:latest
+    container_name: kaneo-app
+    restart: unless-stopped
+    ports:
+      # 宿主机端口:容器内端口（容器内 Nginx 固定监听 5173，宿主机可映射为 5174）
+      - "${KANEO_PORT:-5174}:5173"
+    environment:
+      # 必填：外部访问地址（如 https://kaneo.example.com 或 http://服务器IP:5174）
+      KANEO_CLIENT_URL: ${KANEO_CLIENT_URL:-http://localhost:5174}
+      # 数据库连接（默认连接上方 postgres 容器；若使用 1Panel 已安装的 PostgreSQL 应用，可直接填写 DATABASE_URL 并删掉上方 postgres 服务）
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:-kaneo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?请设置 POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-kaneo}
+      # 必填：会话加密密钥与通知密钥加密 Key（建议用 openssl rand -hex 32 生成固定值）
+      AUTH_SECRET: ${AUTH_SECRET:?请设置 AUTH_SECRET}
+      NOTIFICATION_SECRET_ENCRYPTION_KEY: ${NOTIFICATION_SECRET_ENCRYPTION_KEY:-}
+      # 可选：企业自建应用 1 对 1 私聊通知配置（飞书 / Lark / 钉钉）
+      FEISHU_APP_ID: ${FEISHU_APP_ID:-}
+      FEISHU_APP_SECRET: ${FEISHU_APP_SECRET:-}
+      LARK_APP_ID: ${LARK_APP_ID:-}
+      LARK_APP_SECRET: ${LARK_APP_SECRET:-}
+      DINGTALK_APP_KEY: ${DINGTALK_APP_KEY:-}
+      DINGTALK_APP_SECRET: ${DINGTALK_APP_SECRET:-}
+      DINGTALK_ROBOT_CODE: ${DINGTALK_ROBOT_CODE:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-Y", "off", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5173/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  kaneo_postgres_data:
