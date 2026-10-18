@@ -26,5 +26,8 @@ export const configSchema = z
     customOAuthAutoLogin: z.boolean(),
     customOAuthLogoutUrl: z.string().nullable(),
     billingEnabled: z.boolean(),
+    hasFeishuApp: z.boolean().optional(),
+    hasLarkApp: z.boolean().optional(),
+    hasDingtalkApp: z.boolean().optional(),
   })
   .openapi("Config");

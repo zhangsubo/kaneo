@@ -1,17 +1,23 @@
 import { Webhook } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
+import { DingtalkIcon } from "@/components/icons/dingtalk-icon";
 import { DiscordIcon } from "@/components/icons/discord-icon";
+import { FeishuIcon } from "@/components/icons/feishu-icon";
 import { GiteaIcon } from "@/components/icons/gitea-icon";
 import { GithubIcon } from "@/components/icons/github-icon";
 import { GitlabIcon } from "@/components/icons/gitlab-icon";
+import { LarkIcon } from "@/components/icons/lark-icon";
 import { MattermostIcon } from "@/components/icons/mattermost-icon";
 import { SlackIcon } from "@/components/icons/slack-icon";
 import { TelegramIcon } from "@/components/icons/telegram-icon";
+import { DingtalkIntegrationSettings } from "@/components/project/dingtalk-integration-settings";
 import { DiscordIntegrationSettings } from "@/components/project/discord-integration-settings";
+import { FeishuIntegrationSettings } from "@/components/project/feishu-integration-settings";
 import { GenericWebhookIntegrationSettings } from "@/components/project/generic-webhook-integration-settings";
 import { GiteaIntegrationSettings } from "@/components/project/gitea-integration/gitea-integration-settings";
 import { GitHubIntegrationSettings } from "@/components/project/github-integration/github-integration-settings";
 import { GitlabIntegrationSettings } from "@/components/project/gitlab-integration/gitlab-integration-settings";
+import { LarkIntegrationSettings } from "@/components/project/lark-integration-settings";
 import { MattermostIntegrationSettings } from "@/components/project/mattermost-integration-settings";
 import { SlackIntegrationSettings } from "@/components/project/slack-integration-settings";
 import { TelegramIntegrationSettings } from "@/components/project/telegram-integration-settings";
@@ -23,6 +29,9 @@ export type IntegrationId =
   | "slack"
   | "discord"
   | "mattermost"
+  | "feishu"
+  | "lark"
+  | "dingtalk"
   | "telegram"
   | "webhook";
 
@@ -90,6 +99,33 @@ export const INTEGRATIONS: IntegrationDefinition[] = [
     icon: MattermostIcon,
     iconClassName: "text-[#0058CC] dark:text-[#5C9DFF]",
     Settings: MattermostIntegrationSettings,
+  },
+  {
+    id: "feishu",
+    category: "chat",
+    name: { key: "settings:projectIntegrations.feishuSectionTitle" },
+    descriptionKey: "settings:projectIntegrations.feishuSectionSubtitle",
+    icon: FeishuIcon,
+    iconClassName: "text-[#3370FF]",
+    Settings: FeishuIntegrationSettings,
+  },
+  {
+    id: "lark",
+    category: "chat",
+    name: { key: "settings:projectIntegrations.larkSectionTitle" },
+    descriptionKey: "settings:projectIntegrations.larkSectionSubtitle",
+    icon: LarkIcon,
+    iconClassName: "text-[#00D6B9]",
+    Settings: LarkIntegrationSettings,
+  },
+  {
+    id: "dingtalk",
+    category: "chat",
+    name: { key: "settings:projectIntegrations.dingtalkSectionTitle" },
+    descriptionKey: "settings:projectIntegrations.dingtalkSectionSubtitle",
+    icon: DingtalkIcon,
+    iconClassName: "text-[#0089FF]",
+    Settings: DingtalkIntegrationSettings,
   },
   {
     id: "telegram",

@@ -11,6 +11,13 @@ export const integrationEventsSchema = z
   })
   .openapi("IntegrationEvents");
 
+export const imIntegrationEventsSchema = integrationEventsSchema
+  .extend({
+    taskAssigneeChanged: z.boolean(),
+    taskDueDateChanged: z.boolean(),
+  })
+  .openapi("ImIntegrationEvents");
+
 export const genericWebhookEventsSchema = integrationEventsSchema
   .extend({
     taskDeleted: z.boolean(),

@@ -608,6 +608,15 @@
           },
           "billingEnabled": {
             "type": "boolean"
+          },
+          "hasFeishuApp": {
+            "type": "boolean"
+          },
+          "hasLarkApp": {
+            "type": "boolean"
+          },
+          "hasDingtalkApp": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -2126,6 +2135,87 @@
               "null"
             ]
           },
+          "feishuEnabled": {
+            "type": "boolean"
+          },
+          "feishuConfigured": {
+            "type": "boolean"
+          },
+          "feishuWebhookUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "feishuSecretConfigured": {
+            "type": "boolean"
+          },
+          "maskedFeishuSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "feishuAtId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "larkEnabled": {
+            "type": "boolean"
+          },
+          "larkConfigured": {
+            "type": "boolean"
+          },
+          "larkWebhookUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "larkSecretConfigured": {
+            "type": "boolean"
+          },
+          "maskedLarkSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "larkAtId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dingtalkEnabled": {
+            "type": "boolean"
+          },
+          "dingtalkConfigured": {
+            "type": "boolean"
+          },
+          "dingtalkWebhookUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dingtalkSecretConfigured": {
+            "type": "boolean"
+          },
+          "maskedDingtalkSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dingtalkAtId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "taskAssignmentEnabled": {
             "type": "boolean"
           },
@@ -2183,6 +2273,24 @@
           "webhookUrl",
           "webhookSecretConfigured",
           "maskedWebhookSecret",
+          "feishuEnabled",
+          "feishuConfigured",
+          "feishuWebhookUrl",
+          "feishuSecretConfigured",
+          "maskedFeishuSecret",
+          "feishuAtId",
+          "larkEnabled",
+          "larkConfigured",
+          "larkWebhookUrl",
+          "larkSecretConfigured",
+          "maskedLarkSecret",
+          "larkAtId",
+          "dingtalkEnabled",
+          "dingtalkConfigured",
+          "dingtalkWebhookUrl",
+          "dingtalkSecretConfigured",
+          "maskedDingtalkSecret",
+          "dingtalkAtId",
           "taskAssignmentEnabled",
           "taskCommentEnabled",
           "taskStatusChangeEnabled",
@@ -2221,6 +2329,15 @@
           "webhookEnabled": {
             "type": "boolean"
           },
+          "feishuEnabled": {
+            "type": "boolean"
+          },
+          "larkEnabled": {
+            "type": "boolean"
+          },
+          "dingtalkEnabled": {
+            "type": "boolean"
+          },
           "projectMode": {
             "type": "string",
             "enum": [
@@ -2253,6 +2370,9 @@
           "ntfyEnabled",
           "gotifyEnabled",
           "webhookEnabled",
+          "feishuEnabled",
+          "larkEnabled",
+          "dingtalkEnabled",
           "projectMode",
           "selectedProjectIds",
           "createdAt",
@@ -3917,6 +4037,223 @@
           "chatLabel",
           "botTokenConfigured",
           "maskedBotToken",
+          "events",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "FeishuIntegration": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "channelName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "webhookConfigured": {
+            "type": "boolean"
+          },
+          "maskedWebhookUrl": {
+            "type": "string"
+          },
+          "secretConfigured": {
+            "type": "boolean"
+          },
+          "maskedSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "events": {
+            "$ref": "#/components/schemas/ImIntegrationEvents"
+          },
+          "isActive": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "channelName",
+          "webhookConfigured",
+          "maskedWebhookUrl",
+          "secretConfigured",
+          "maskedSecret",
+          "events",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "ImIntegrationEvents": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IntegrationEvents"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "taskAssigneeChanged": {
+                "type": "boolean"
+              },
+              "taskDueDateChanged": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "taskAssigneeChanged",
+              "taskDueDateChanged"
+            ]
+          }
+        ]
+      },
+      "LarkIntegration": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "channelName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "webhookConfigured": {
+            "type": "boolean"
+          },
+          "maskedWebhookUrl": {
+            "type": "string"
+          },
+          "secretConfigured": {
+            "type": "boolean"
+          },
+          "maskedSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "events": {
+            "$ref": "#/components/schemas/ImIntegrationEvents"
+          },
+          "isActive": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "channelName",
+          "webhookConfigured",
+          "maskedWebhookUrl",
+          "secretConfigured",
+          "maskedSecret",
+          "events",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "DingtalkIntegration": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "channelName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "webhookConfigured": {
+            "type": "boolean"
+          },
+          "maskedWebhookUrl": {
+            "type": "string"
+          },
+          "secretConfigured": {
+            "type": "boolean"
+          },
+          "maskedSecret": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "events": {
+            "$ref": "#/components/schemas/ImIntegrationEvents"
+          },
+          "isActive": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "projectId",
+          "channelName",
+          "webhookConfigured",
+          "maskedWebhookUrl",
+          "secretConfigured",
+          "maskedSecret",
           "events",
           "isActive",
           "createdAt",
@@ -15842,6 +16179,69 @@
                       "null"
                     ]
                   },
+                  "feishuEnabled": {
+                    "type": "boolean"
+                  },
+                  "feishuWebhookUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "feishuSecret": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "feishuAtId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "larkEnabled": {
+                    "type": "boolean"
+                  },
+                  "larkWebhookUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "larkSecret": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "larkAtId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "dingtalkEnabled": {
+                    "type": "boolean"
+                  },
+                  "dingtalkWebhookUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "dingtalkSecret": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "dingtalkAtId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
                   "taskAssignmentEnabled": {
                     "type": "boolean"
                   },
@@ -15941,6 +16341,18 @@
                   },
                   "webhookEnabled": {
                     "type": "boolean"
+                  },
+                  "feishuEnabled": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "larkEnabled": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "dingtalkEnabled": {
+                    "type": "boolean",
+                    "default": false
                   },
                   "projectMode": {
                     "type": "string",
@@ -20917,6 +21329,1197 @@
           },
           "404": {
             "description": "Project or Telegram integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      }
+    },
+    "/feishu-integration/project/{projectId}": {
+      "get": {
+        "operationId": "getFeishuIntegration",
+        "tags": [
+          "Feishu"
+        ],
+        "summary": "Get Feishu integration",
+        "description": "Get the Feishu integration for a project, or null when none is configured.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Feishu integration details, or null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeishuIntegration"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createFeishuIntegration",
+        "tags": [
+          "Feishu"
+        ],
+        "summary": "Create Feishu integration",
+        "description": "Create or replace the Feishu bot integration for a project.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "secret": {
+                    "type": "string",
+                    "description": "Optional signing secret for the Feishu custom bot."
+                  },
+                  "channelName": {
+                    "type": "string"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "webhookUrl"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The stored integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeishuIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The webhook URL failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateFeishuIntegration",
+        "tags": [
+          "Feishu"
+        ],
+        "summary": "Update Feishu integration",
+        "description": "Update the Feishu integration. Omitted fields keep their current value, and null clears optional fields.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string"
+                  },
+                  "secret": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Send null to remove the signing secret."
+                  },
+                  "channelName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeishuIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The resulting config failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or Feishu integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteFeishuIntegration",
+        "tags": [
+          "Feishu"
+        ],
+        "summary": "Delete Feishu integration",
+        "description": "Remove the Feishu integration from a project.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The integration was removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or Feishu integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      }
+    },
+    "/lark-integration/project/{projectId}": {
+      "get": {
+        "operationId": "getLarkIntegration",
+        "tags": [
+          "Lark"
+        ],
+        "summary": "Get Lark integration",
+        "description": "Get the Lark integration for a project, or null when none is configured.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lark integration details, or null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LarkIntegration"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createLarkIntegration",
+        "tags": [
+          "Lark"
+        ],
+        "summary": "Create Lark integration",
+        "description": "Create or replace the Lark bot integration for a project.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "secret": {
+                    "type": "string",
+                    "description": "Optional signing secret for the Lark custom bot."
+                  },
+                  "channelName": {
+                    "type": "string"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "webhookUrl"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The stored integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LarkIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The webhook URL failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateLarkIntegration",
+        "tags": [
+          "Lark"
+        ],
+        "summary": "Update Lark integration",
+        "description": "Update the Lark integration. Omitted fields keep their current value, and null clears optional fields.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string"
+                  },
+                  "secret": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Send null to remove the signing secret."
+                  },
+                  "channelName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LarkIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The resulting config failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or Lark integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteLarkIntegration",
+        "tags": [
+          "Lark"
+        ],
+        "summary": "Delete Lark integration",
+        "description": "Remove the Lark integration from a project.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The integration was removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or Lark integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      }
+    },
+    "/dingtalk-integration/project/{projectId}": {
+      "get": {
+        "operationId": "getDingtalkIntegration",
+        "tags": [
+          "DingTalk"
+        ],
+        "summary": "Get DingTalk integration",
+        "description": "Get the DingTalk integration for a project, or null when none is configured.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DingTalk integration details, or null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DingtalkIntegration"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createDingtalkIntegration",
+        "tags": [
+          "DingTalk"
+        ],
+        "summary": "Create DingTalk integration",
+        "description": "Create or replace the DingTalk bot integration for a project.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "secret": {
+                    "type": "string",
+                    "description": "Optional signing secret for the DingTalk custom bot."
+                  },
+                  "channelName": {
+                    "type": "string"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "webhookUrl"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The stored integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DingtalkIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The webhook URL failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateDingtalkIntegration",
+        "tags": [
+          "DingTalk"
+        ],
+        "summary": "Update DingTalk integration",
+        "description": "Update the DingTalk integration. Omitted fields keep their current value, and null clears optional fields.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "webhookUrl": {
+                    "type": "string"
+                  },
+                  "secret": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Send null to remove the signing secret."
+                  },
+                  "channelName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "events": {
+                    "type": "object",
+                    "properties": {
+                      "taskCreated": {
+                        "type": "boolean"
+                      },
+                      "taskStatusChanged": {
+                        "type": "boolean"
+                      },
+                      "taskPriorityChanged": {
+                        "type": "boolean"
+                      },
+                      "taskTitleChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDescriptionChanged": {
+                        "type": "boolean"
+                      },
+                      "taskCommentCreated": {
+                        "type": "boolean"
+                      },
+                      "taskAssigneeChanged": {
+                        "type": "boolean"
+                      },
+                      "taskDueDateChanged": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated integration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DingtalkIntegration"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The resulting config failed validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or DingTalk integration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/ApiKeyRateLimited"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteDingtalkIntegration",
+        "tags": [
+          "DingTalk"
+        ],
+        "summary": "Delete DingTalk integration",
+        "description": "Remove the DingTalk integration from a project.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "projectId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The integration was removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "success"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No access to the project, or missing workspace:manage_settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Project or DingTalk integration not found",
             "content": {
               "application/json": {
                 "schema": {

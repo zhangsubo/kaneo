@@ -70,6 +70,12 @@ const preferences = {
   ntfyEnabled: false,
   webhookConfigured: false,
   webhookEnabled: false,
+  feishuConfigured: false,
+  feishuEnabled: false,
+  larkConfigured: false,
+  larkEnabled: false,
+  dingtalkConfigured: false,
+  dingtalkEnabled: false,
   workspaces: [
     {
       id: "r1",
@@ -80,6 +86,9 @@ const preferences = {
       gotifyEnabled: false,
       ntfyEnabled: false,
       webhookEnabled: false,
+      feishuEnabled: false,
+      larkEnabled: false,
+      dingtalkEnabled: false,
       projectMode: "all",
       selectedProjectIds: [],
       createdAt: "",
@@ -149,7 +158,7 @@ describe("WorkspacesSection", () => {
     ).toBeTruthy();
     expect(
       dialog.getAllByText("settings:notificationsPage.channelNotConnected"),
-    ).toHaveLength(2);
+    ).toHaveLength(5);
 
     fireEvent.click(
       dialog.getByRole("button", {
@@ -172,6 +181,9 @@ describe("WorkspacesSection", () => {
         gotifyEnabled: false,
         ntfyEnabled: false,
         webhookEnabled: false,
+        feishuEnabled: false,
+        larkEnabled: false,
+        dingtalkEnabled: false,
         projectMode: "selected",
         selectedProjectIds: ["p2"],
       },

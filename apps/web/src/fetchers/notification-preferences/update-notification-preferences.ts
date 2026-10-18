@@ -14,6 +14,18 @@ export type UpdateNotificationPreferencesRequest = {
   webhookEnabled?: boolean;
   webhookUrl?: string | null;
   webhookSecret?: string | null;
+  feishuEnabled?: boolean;
+  feishuWebhookUrl?: string | null;
+  feishuSecret?: string | null;
+  feishuAtId?: string | null;
+  larkEnabled?: boolean;
+  larkWebhookUrl?: string | null;
+  larkSecret?: string | null;
+  larkAtId?: string | null;
+  dingtalkEnabled?: boolean;
+  dingtalkWebhookUrl?: string | null;
+  dingtalkSecret?: string | null;
+  dingtalkAtId?: string | null;
   taskAssignmentEnabled?: boolean;
   taskCommentEnabled?: boolean;
   taskStatusChangeEnabled?: boolean;

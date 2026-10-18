@@ -870,6 +870,18 @@ export const userNotificationPreferenceTable = pgTable(
     webhookEnabled: boolean("webhook_enabled").default(false).notNull(),
     webhookUrl: text("webhook_url"),
     webhookSecret: text("webhook_secret"),
+    feishuEnabled: boolean("feishu_enabled").default(false).notNull(),
+    feishuWebhookUrl: text("feishu_webhook_url"),
+    feishuSecret: text("feishu_secret"),
+    feishuAtId: text("feishu_at_id"),
+    larkEnabled: boolean("lark_enabled").default(false).notNull(),
+    larkWebhookUrl: text("lark_webhook_url"),
+    larkSecret: text("lark_secret"),
+    larkAtId: text("lark_at_id"),
+    dingtalkEnabled: boolean("dingtalk_enabled").default(false).notNull(),
+    dingtalkWebhookUrl: text("dingtalk_webhook_url"),
+    dingtalkSecret: text("dingtalk_secret"),
+    dingtalkAtId: text("dingtalk_at_id"),
     taskAssignmentEnabled: boolean("task_assignment_enabled")
       .default(true)
       .notNull(),
@@ -918,6 +930,9 @@ export const userNotificationWorkspaceRuleTable = pgTable(
     ntfyEnabled: boolean("ntfy_enabled").default(false).notNull(),
     gotifyEnabled: boolean("gotify_enabled").default(false).notNull(),
     webhookEnabled: boolean("webhook_enabled").default(false).notNull(),
+    feishuEnabled: boolean("feishu_enabled").default(false).notNull(),
+    larkEnabled: boolean("lark_enabled").default(false).notNull(),
+    dingtalkEnabled: boolean("dingtalk_enabled").default(false).notNull(),
     projectMode: text("project_mode").default("all").notNull(),
     createdAt: timestamp("created_at", { mode: "date" })
       .default(utcNow)

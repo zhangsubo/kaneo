@@ -8,6 +8,9 @@ export type UpsertNotificationWorkspaceRuleRequest = {
   ntfyEnabled: boolean;
   gotifyEnabled: boolean;
   webhookEnabled: boolean;
+  feishuEnabled?: boolean;
+  larkEnabled?: boolean;
+  dingtalkEnabled?: boolean;
   projectMode: "all" | "selected";
   selectedProjectIds?: string[];
 };

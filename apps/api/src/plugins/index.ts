@@ -1,8 +1,11 @@
+import { dingtalkPlugin } from "./dingtalk";
 import { discordPlugin } from "./discord";
+import { feishuPlugin } from "./feishu";
 import { genericWebhookPlugin } from "./generic-webhook";
 import { giteaPlugin } from "./gitea";
 import { githubPlugin, initializeGitHubPlugin } from "./github";
 import { gitlabPlugin } from "./gitlab";
+import { larkPlugin } from "./lark";
 import { mattermostPlugin } from "./mattermost";
 import { initializeEventSubscriptions, registerPlugin } from "./registry";
 import { slackPlugin } from "./slack";
@@ -19,6 +22,9 @@ export function initializePlugins() {
   registerPlugin(discordPlugin);
   registerPlugin(genericWebhookPlugin);
   registerPlugin(telegramPlugin);
+  registerPlugin(feishuPlugin);
+  registerPlugin(larkPlugin);
+  registerPlugin(dingtalkPlugin);
   initializeGitHubPlugin();
   initializeEventSubscriptions();
 

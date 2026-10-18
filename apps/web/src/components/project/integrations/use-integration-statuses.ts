@@ -9,6 +9,7 @@ import useGetGenericWebhookIntegration from "@/hooks/queries/generic-webhook-int
 import useGetGiteaIntegration from "@/hooks/queries/gitea-integration/use-get-gitea-integration";
 import useGetGithubIntegration from "@/hooks/queries/github-integration/use-get-github-integration";
 import useGetGitlabIntegration from "@/hooks/queries/gitlab-integration/use-get-gitlab-integration";
+import useGetImIntegration from "@/hooks/queries/im-integration/use-get-im-integration";
 import useGetMattermostIntegration from "@/hooks/queries/mattermost-integration/use-get-mattermost-integration";
 import useGetSlackIntegration from "@/hooks/queries/slack-integration/use-get-slack-integration";
 import useGetTelegramIntegration from "@/hooks/queries/telegram-integration/use-get-telegram-integration";
@@ -22,6 +23,9 @@ export function useIntegrationStatuses(projectId: string) {
   const slack = useGetSlackIntegration(projectId);
   const discord = useGetDiscordIntegration(projectId);
   const mattermost = useGetMattermostIntegration(projectId);
+  const feishu = useGetImIntegration("feishu", projectId);
+  const lark = useGetImIntegration("lark", projectId);
+  const dingtalk = useGetImIntegration("dingtalk", projectId);
   const telegram = useGetTelegramIntegration(projectId);
   const webhook = useGetGenericWebhookIntegration(projectId);
 
@@ -74,6 +78,27 @@ export function useIntegrationStatuses(projectId: string) {
       isActive: mattermost.data?.isActive,
       detail: formatChannel(mattermost.data?.channelName),
     }),
+    feishu: getIntegrationStatus({
+      queryStatus: feishu.status,
+      hasData: feishu.data !== undefined,
+      configured: Boolean(feishu.data?.webhookConfigured),
+      isActive: feishu.data?.isActive,
+      detail: formatChannel(feishu.data?.channelName),
+    }),
+    lark: getIntegrationStatus({
+      queryStatus: lark.status,
+      hasData: lark.data !== undefined,
+      configured: Boolean(lark.data?.webhookConfigured),
+      isActive: lark.data?.isActive,
+      detail: formatChannel(lark.data?.channelName),
+    }),
+    dingtalk: getIntegrationStatus({
+      queryStatus: dingtalk.status,
+      hasData: dingtalk.data !== undefined,
+      configured: Boolean(dingtalk.data?.webhookConfigured),
+      isActive: dingtalk.data?.isActive,
+      detail: formatChannel(dingtalk.data?.channelName),
+    }),
     telegram: getIntegrationStatus({
       queryStatus: telegram.status,
       hasData: telegram.data !== undefined,
@@ -95,6 +120,9 @@ export function useIntegrationStatuses(projectId: string) {
     slack,
     discord,
     mattermost,
+    feishu,
+    lark,
+    dingtalk,
     telegram,
     webhook,
   };

@@ -10,6 +10,9 @@ const availability: ChannelAvailabilityMap = {
   gotify: "paused",
   ntfy: "notConnected",
   webhook: "available",
+  feishu: "available",
+  lark: "notConnected",
+  dingtalk: "paused",
 };
 
 describe("createWorkspaceRuleState", () => {
@@ -20,6 +23,9 @@ describe("createWorkspaceRuleState", () => {
       gotifyEnabled: false,
       ntfyEnabled: false,
       webhookEnabled: true,
+      feishuEnabled: true,
+      larkEnabled: false,
+      dingtalkEnabled: false,
       projectMode: "all",
       selectedProjectIds: [],
     });
@@ -32,6 +38,9 @@ describe("createWorkspaceRuleState", () => {
       gotifyEnabled: true,
       ntfyEnabled: false,
       webhookEnabled: false,
+      feishuEnabled: true,
+      larkEnabled: false,
+      dingtalkEnabled: false,
       projectMode: "selected" as const,
       selectedProjectIds: ["p1"],
     };
@@ -50,6 +59,9 @@ describe("toWorkspaceRuleRequest", () => {
           gotifyEnabled: true,
           ntfyEnabled: true,
           webhookEnabled: true,
+          feishuEnabled: true,
+          larkEnabled: true,
+          dingtalkEnabled: true,
           projectMode: "selected",
           selectedProjectIds: ["p1", "p2"],
         },
@@ -61,6 +73,9 @@ describe("toWorkspaceRuleRequest", () => {
       gotifyEnabled: false,
       ntfyEnabled: false,
       webhookEnabled: true,
+      feishuEnabled: true,
+      larkEnabled: false,
+      dingtalkEnabled: false,
       projectMode: "selected",
       selectedProjectIds: ["p1", "p2"],
     });

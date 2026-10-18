@@ -9,6 +9,9 @@ export type WorkspaceRule = Pick<
   NotificationPreferenceWorkspaceRule,
   | "isActive"
   | "emailEnabled"
+  | "feishuEnabled"
+  | "larkEnabled"
+  | "dingtalkEnabled"
   | "gotifyEnabled"
   | "ntfyEnabled"
   | "webhookEnabled"
@@ -16,14 +19,28 @@ export type WorkspaceRule = Pick<
   | "selectedProjectIds"
 >;
 
-export type WorkspaceRuleState = WorkspaceRule;
+export type WorkspaceRuleState = {
+  isActive: boolean;
+  emailEnabled: boolean;
+  feishuEnabled: boolean;
+  larkEnabled: boolean;
+  dingtalkEnabled: boolean;
+  gotifyEnabled: boolean;
+  ntfyEnabled: boolean;
+  webhookEnabled: boolean;
+  projectMode: "all" | "selected";
+  selectedProjectIds: string[];
+};
 
 export const RULE_CHANNEL_KEYS = {
   email: "emailEnabled",
+  feishu: "feishuEnabled",
+  lark: "larkEnabled",
+  dingtalk: "dingtalkEnabled",
   gotify: "gotifyEnabled",
   ntfy: "ntfyEnabled",
   webhook: "webhookEnabled",
-} as const satisfies Record<NotificationChannelId, keyof WorkspaceRule>;
+} as const satisfies Record<NotificationChannelId, keyof WorkspaceRuleState>;
 
 export function createWorkspaceRuleState(
   rule: WorkspaceRule | undefined,
@@ -33,6 +50,9 @@ export function createWorkspaceRuleState(
     return {
       isActive: rule.isActive,
       emailEnabled: rule.emailEnabled,
+      feishuEnabled: rule.feishuEnabled ?? false,
+      larkEnabled: rule.larkEnabled ?? false,
+      dingtalkEnabled: rule.dingtalkEnabled ?? false,
       gotifyEnabled: rule.gotifyEnabled,
       ntfyEnabled: rule.ntfyEnabled,
       webhookEnabled: rule.webhookEnabled,
@@ -44,6 +64,9 @@ export function createWorkspaceRuleState(
   return {
     isActive: true,
     emailEnabled: availability.email === "available",
+    feishuEnabled: availability.feishu === "available",
+    larkEnabled: availability.lark === "available",
+    dingtalkEnabled: availability.dingtalk === "available",
     gotifyEnabled: availability.gotify === "available",
     ntfyEnabled: availability.ntfy === "available",
     webhookEnabled: availability.webhook === "available",
@@ -59,6 +82,10 @@ export function toWorkspaceRuleRequest(
   return {
     isActive: state.isActive,
     emailEnabled: state.emailEnabled && availability.email === "available",
+    feishuEnabled: state.feishuEnabled && availability.feishu === "available",
+    larkEnabled: state.larkEnabled && availability.lark === "available",
+    dingtalkEnabled:
+      state.dingtalkEnabled && availability.dingtalk === "available",
     gotifyEnabled: state.gotifyEnabled && availability.gotify === "available",
     ntfyEnabled: state.ntfyEnabled && availability.ntfy === "available",
     webhookEnabled:

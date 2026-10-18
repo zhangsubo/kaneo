@@ -8,10 +8,17 @@ import {
   userNotificationWorkspaceRuleTable,
   workspaceUserTable,
 } from "../database/schema";
+import { dingtalkWebhookUrlPattern } from "../plugins/dingtalk/sender";
+import {
+  feishuWebhookUrlPattern,
+  larkWebhookUrlPattern,
+} from "../plugins/feishu-shared/sender";
 import { assertPublicWebhookDestination } from "../plugins/generic-webhook/config";
 import { findInaccessibleProjectIds } from "../project-access/find-inaccessible-project-ids";
 import { projectAccessCondition } from "../project-access/project-access-condition";
 import { findHiddenRuleProjectIds } from "./find-hidden-rule-project-ids";
+import { isDingTalkAppConfigured } from "./open-platform/dingtalk-app-client";
+import { isFeishuAppConfigured } from "./open-platform/feishu-app-client";
 import { decryptSecret, encryptSecret } from "./secrets";
 
 export type NotificationPreferenceProjectMode = "all" | "selected";
@@ -35,6 +42,24 @@ export type NotificationPreferenceResponse = {
   webhookUrl: string | null;
   webhookSecretConfigured: boolean;
   maskedWebhookSecret: string | null;
+  feishuEnabled: boolean;
+  feishuConfigured: boolean;
+  feishuWebhookUrl: string | null;
+  feishuSecretConfigured: boolean;
+  maskedFeishuSecret: string | null;
+  feishuAtId: string | null;
+  larkEnabled: boolean;
+  larkConfigured: boolean;
+  larkWebhookUrl: string | null;
+  larkSecretConfigured: boolean;
+  maskedLarkSecret: string | null;
+  larkAtId: string | null;
+  dingtalkEnabled: boolean;
+  dingtalkConfigured: boolean;
+  dingtalkWebhookUrl: string | null;
+  dingtalkSecretConfigured: boolean;
+  maskedDingtalkSecret: string | null;
+  dingtalkAtId: string | null;
   taskAssignmentEnabled: boolean;
   taskCommentEnabled: boolean;
   taskStatusChangeEnabled: boolean;
@@ -49,6 +74,9 @@ export type NotificationPreferenceResponse = {
     ntfyEnabled: boolean;
     gotifyEnabled: boolean;
     webhookEnabled: boolean;
+    feishuEnabled: boolean;
+    larkEnabled: boolean;
+    dingtalkEnabled: boolean;
     projectMode: NotificationPreferenceProjectMode;
     selectedProjectIds: string[];
     createdAt: Date;
@@ -70,6 +98,18 @@ export type UpdateNotificationPreferenceInput = {
   webhookEnabled?: boolean;
   webhookUrl?: string | null;
   webhookSecret?: string | null;
+  feishuEnabled?: boolean;
+  feishuWebhookUrl?: string | null;
+  feishuSecret?: string | null;
+  feishuAtId?: string | null;
+  larkEnabled?: boolean;
+  larkWebhookUrl?: string | null;
+  larkSecret?: string | null;
+  larkAtId?: string | null;
+  dingtalkEnabled?: boolean;
+  dingtalkWebhookUrl?: string | null;
+  dingtalkSecret?: string | null;
+  dingtalkAtId?: string | null;
   taskAssignmentEnabled?: boolean;
   taskCommentEnabled?: boolean;
   taskStatusChangeEnabled?: boolean;
@@ -83,6 +123,9 @@ export type UpsertWorkspaceRuleInput = {
   ntfyEnabled: boolean;
   gotifyEnabled: boolean;
   webhookEnabled: boolean;
+  feishuEnabled?: boolean;
+  larkEnabled?: boolean;
+  dingtalkEnabled?: boolean;
   projectMode: NotificationPreferenceProjectMode;
   selectedProjectIds?: string[];
 };
@@ -92,6 +135,9 @@ type WorkspaceRuleChannelState = {
   ntfyEnabled: boolean;
   gotifyEnabled: boolean;
   webhookEnabled: boolean;
+  feishuEnabled: boolean;
+  larkEnabled: boolean;
+  dingtalkEnabled: boolean;
 };
 
 function normalizeOptionalString(value: string | null | undefined) {
@@ -117,6 +163,42 @@ function normalizeSecretInput(
   }
 
   return normalizeOptionalString(inputValue);
+}
+
+function isFeishuChannelConfigured(
+  webhookUrl: string | null | undefined,
+  atId: string | null | undefined,
+  enabled: boolean | null | undefined,
+  emailAddress: string | null,
+): boolean {
+  if (webhookUrl) return true;
+  return (
+    isFeishuAppConfigured("feishu") &&
+    Boolean(atId || emailAddress) &&
+    Boolean(enabled || atId)
+  );
+}
+
+function isLarkChannelConfigured(
+  webhookUrl: string | null | undefined,
+  atId: string | null | undefined,
+  enabled: boolean | null | undefined,
+  emailAddress: string | null,
+): boolean {
+  if (webhookUrl) return true;
+  return (
+    isFeishuAppConfigured("lark") &&
+    Boolean(atId || emailAddress) &&
+    Boolean(enabled || atId)
+  );
+}
+
+function isDingTalkChannelConfigured(
+  webhookUrl: string | null | undefined,
+  atId: string | null | undefined,
+): boolean {
+  if (webhookUrl) return true;
+  return isDingTalkAppConfigured() && Boolean(atId);
 }
 
 async function assertWorkspaceMembership(userId: string, workspaceId: string) {
@@ -182,6 +264,9 @@ export async function getNotificationPreferences(
         ntfyToken: decryptSecret(preference.ntfyToken),
         gotifyToken: decryptSecret(preference.gotifyToken),
         webhookSecret: decryptSecret(preference.webhookSecret),
+        feishuSecret: decryptSecret(preference.feishuSecret),
+        larkSecret: decryptSecret(preference.larkSecret),
+        dingtalkSecret: decryptSecret(preference.dingtalkSecret),
       }
     : null;
 
@@ -225,6 +310,37 @@ export async function getNotificationPreferences(
     webhookUrl: decryptedPreference?.webhookUrl ?? null,
     webhookSecretConfigured: Boolean(decryptedPreference?.webhookSecret),
     maskedWebhookSecret: maskValue(decryptedPreference?.webhookSecret),
+    feishuEnabled: decryptedPreference?.feishuEnabled ?? false,
+    feishuConfigured: isFeishuChannelConfigured(
+      decryptedPreference?.feishuWebhookUrl,
+      decryptedPreference?.feishuAtId,
+      decryptedPreference?.feishuEnabled,
+      emailAddress,
+    ),
+    feishuWebhookUrl: decryptedPreference?.feishuWebhookUrl ?? null,
+    feishuSecretConfigured: Boolean(decryptedPreference?.feishuSecret),
+    maskedFeishuSecret: maskValue(decryptedPreference?.feishuSecret),
+    feishuAtId: decryptedPreference?.feishuAtId ?? null,
+    larkEnabled: decryptedPreference?.larkEnabled ?? false,
+    larkConfigured: isLarkChannelConfigured(
+      decryptedPreference?.larkWebhookUrl,
+      decryptedPreference?.larkAtId,
+      decryptedPreference?.larkEnabled,
+      emailAddress,
+    ),
+    larkWebhookUrl: decryptedPreference?.larkWebhookUrl ?? null,
+    larkSecretConfigured: Boolean(decryptedPreference?.larkSecret),
+    maskedLarkSecret: maskValue(decryptedPreference?.larkSecret),
+    larkAtId: decryptedPreference?.larkAtId ?? null,
+    dingtalkEnabled: decryptedPreference?.dingtalkEnabled ?? false,
+    dingtalkConfigured: isDingTalkChannelConfigured(
+      decryptedPreference?.dingtalkWebhookUrl,
+      decryptedPreference?.dingtalkAtId,
+    ),
+    dingtalkWebhookUrl: decryptedPreference?.dingtalkWebhookUrl ?? null,
+    dingtalkSecretConfigured: Boolean(decryptedPreference?.dingtalkSecret),
+    maskedDingtalkSecret: maskValue(decryptedPreference?.dingtalkSecret),
+    dingtalkAtId: decryptedPreference?.dingtalkAtId ?? null,
     taskAssignmentEnabled: preference?.taskAssignmentEnabled ?? true,
     taskCommentEnabled: preference?.taskCommentEnabled ?? true,
     taskStatusChangeEnabled: preference?.taskStatusChangeEnabled ?? true,
@@ -240,6 +356,9 @@ export async function getNotificationPreferences(
       ntfyEnabled: rule.ntfyEnabled ?? false,
       gotifyEnabled: rule.gotifyEnabled ?? false,
       webhookEnabled: rule.webhookEnabled ?? false,
+      feishuEnabled: rule.feishuEnabled ?? false,
+      larkEnabled: rule.larkEnabled ?? false,
+      dingtalkEnabled: rule.dingtalkEnabled ?? false,
       projectMode:
         rule.projectMode === "selected" ? "selected" : ("all" as const),
       selectedProjectIds: rule.selectedProjects
@@ -268,6 +387,9 @@ export async function updateNotificationPreferences(
         ntfyToken: decryptSecret(existing.ntfyToken),
         gotifyToken: decryptSecret(existing.gotifyToken),
         webhookSecret: decryptSecret(existing.webhookSecret),
+        feishuSecret: decryptSecret(existing.feishuSecret),
+        larkSecret: decryptSecret(existing.larkSecret),
+        dingtalkSecret: decryptSecret(existing.dingtalkSecret),
       }
     : null;
 
@@ -295,6 +417,42 @@ export async function updateNotificationPreferences(
     input.webhookSecret,
     decryptedExisting?.webhookSecret,
   );
+  const feishuWebhookUrl = normalizeSecretInput(
+    input.feishuWebhookUrl,
+    decryptedExisting?.feishuWebhookUrl,
+  );
+  const feishuSecret = normalizeSecretInput(
+    input.feishuSecret,
+    decryptedExisting?.feishuSecret,
+  );
+  const feishuAtId = normalizeSecretInput(
+    input.feishuAtId,
+    decryptedExisting?.feishuAtId,
+  );
+  const larkWebhookUrl = normalizeSecretInput(
+    input.larkWebhookUrl,
+    decryptedExisting?.larkWebhookUrl,
+  );
+  const larkSecret = normalizeSecretInput(
+    input.larkSecret,
+    decryptedExisting?.larkSecret,
+  );
+  const larkAtId = normalizeSecretInput(
+    input.larkAtId,
+    decryptedExisting?.larkAtId,
+  );
+  const dingtalkWebhookUrl = normalizeSecretInput(
+    input.dingtalkWebhookUrl,
+    decryptedExisting?.dingtalkWebhookUrl,
+  );
+  const dingtalkSecret = normalizeSecretInput(
+    input.dingtalkSecret,
+    decryptedExisting?.dingtalkSecret,
+  );
+  const dingtalkAtId = normalizeSecretInput(
+    input.dingtalkAtId,
+    decryptedExisting?.dingtalkAtId,
+  );
 
   const emailEnabled =
     input.emailEnabled ?? decryptedExisting?.emailEnabled ?? false;
@@ -304,12 +462,21 @@ export async function updateNotificationPreferences(
     input.gotifyEnabled ?? decryptedExisting?.gotifyEnabled ?? false;
   const webhookEnabled =
     input.webhookEnabled ?? decryptedExisting?.webhookEnabled ?? false;
+  const feishuEnabled =
+    input.feishuEnabled ?? decryptedExisting?.feishuEnabled ?? false;
+  const larkEnabled =
+    input.larkEnabled ?? decryptedExisting?.larkEnabled ?? false;
+  const dingtalkEnabled =
+    input.dingtalkEnabled ?? decryptedExisting?.dingtalkEnabled ?? false;
 
   const enabledRuleCascade: WorkspaceRuleChannelState = {
     emailEnabled: false,
     ntfyEnabled: false,
     gotifyEnabled: false,
     webhookEnabled: false,
+    feishuEnabled: false,
+    larkEnabled: false,
+    dingtalkEnabled: false,
   };
 
   const shouldValidateNtfy =
@@ -327,6 +494,12 @@ export async function updateNotificationPreferences(
     webhookEnabled ||
     input.webhookUrl !== undefined ||
     input.webhookSecret !== undefined;
+
+  const shouldValidateFeishu = feishuEnabled || Boolean(feishuWebhookUrl);
+
+  const shouldValidateLark = larkEnabled || Boolean(larkWebhookUrl);
+
+  const shouldValidateDingtalk = dingtalkEnabled || Boolean(dingtalkWebhookUrl);
 
   if (emailEnabled && !emailAddress) {
     throw new HTTPException(400, {
@@ -387,6 +560,90 @@ export async function updateNotificationPreferences(
     }
   }
 
+  if (shouldValidateFeishu) {
+    if (feishuWebhookUrl) {
+      if (!feishuWebhookUrlPattern.test(feishuWebhookUrl)) {
+        throw new HTTPException(400, {
+          message: "Invalid Feishu bot webhook URL",
+        });
+      }
+      try {
+        await assertPublicWebhookDestination(feishuWebhookUrl);
+      } catch (error) {
+        throw new HTTPException(400, {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Invalid Feishu bot webhook URL",
+        });
+      }
+    } else if (
+      feishuEnabled &&
+      !(isFeishuAppConfigured("feishu") && (feishuAtId || emailAddress))
+    ) {
+      throw new HTTPException(400, {
+        message:
+          "Feishu notifications require a bot webhook URL or a configured Feishu app",
+      });
+    }
+  }
+
+  if (shouldValidateLark) {
+    if (larkWebhookUrl) {
+      if (!larkWebhookUrlPattern.test(larkWebhookUrl)) {
+        throw new HTTPException(400, {
+          message: "Invalid Lark bot webhook URL",
+        });
+      }
+      try {
+        await assertPublicWebhookDestination(larkWebhookUrl);
+      } catch (error) {
+        throw new HTTPException(400, {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Invalid Lark bot webhook URL",
+        });
+      }
+    } else if (
+      larkEnabled &&
+      !(isFeishuAppConfigured("lark") && (larkAtId || emailAddress))
+    ) {
+      throw new HTTPException(400, {
+        message:
+          "Lark notifications require a bot webhook URL or a configured Lark app",
+      });
+    }
+  }
+
+  if (shouldValidateDingtalk) {
+    if (dingtalkWebhookUrl) {
+      if (!dingtalkWebhookUrlPattern.test(dingtalkWebhookUrl)) {
+        throw new HTTPException(400, {
+          message: "Invalid DingTalk bot webhook URL",
+        });
+      }
+      try {
+        await assertPublicWebhookDestination(dingtalkWebhookUrl);
+      } catch (error) {
+        throw new HTTPException(400, {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Invalid DingTalk bot webhook URL",
+        });
+      }
+    } else if (
+      dingtalkEnabled &&
+      !(isDingTalkAppConfigured() && dingtalkAtId)
+    ) {
+      throw new HTTPException(400, {
+        message:
+          "DingTalk notifications require a bot webhook URL or a configured DingTalk app with a target user ID or mobile",
+      });
+    }
+  }
+
   const data = {
     userId,
     emailEnabled,
@@ -409,6 +666,27 @@ export async function updateNotificationPreferences(
       input.webhookSecret === undefined
         ? (existing?.webhookSecret ?? null)
         : (encryptSecret(webhookSecret) ?? null),
+    feishuEnabled,
+    feishuWebhookUrl,
+    feishuSecret:
+      input.feishuSecret === undefined
+        ? (existing?.feishuSecret ?? null)
+        : (encryptSecret(feishuSecret) ?? null),
+    feishuAtId,
+    larkEnabled,
+    larkWebhookUrl,
+    larkSecret:
+      input.larkSecret === undefined
+        ? (existing?.larkSecret ?? null)
+        : (encryptSecret(larkSecret) ?? null),
+    larkAtId,
+    dingtalkEnabled,
+    dingtalkWebhookUrl,
+    dingtalkSecret:
+      input.dingtalkSecret === undefined
+        ? (existing?.dingtalkSecret ?? null)
+        : (encryptSecret(dingtalkSecret) ?? null),
+    dingtalkAtId,
     taskAssignmentEnabled:
       input.taskAssignmentEnabled ?? existing?.taskAssignmentEnabled ?? true,
     taskCommentEnabled:
@@ -437,17 +715,32 @@ export async function updateNotificationPreferences(
     await db.insert(userNotificationPreferenceTable).values(data);
   }
 
-  const ruleCascade: {
-    emailEnabled?: boolean;
-    ntfyEnabled?: boolean;
-    gotifyEnabled?: boolean;
-    webhookEnabled?: boolean;
-  } = {};
+  const ruleCascade: Partial<WorkspaceRuleChannelState> = {};
 
   const hadEmailEnabled = decryptedExisting?.emailEnabled ?? false;
   const hadNtfyEnabled = decryptedExisting?.ntfyEnabled ?? false;
   const hadGotifyEnabled = decryptedExisting?.gotifyEnabled ?? false;
   const hadWebhookEnabled = decryptedExisting?.webhookEnabled ?? false;
+  const hadFeishuEnabled = decryptedExisting?.feishuEnabled ?? false;
+  const hadLarkEnabled = decryptedExisting?.larkEnabled ?? false;
+  const hadDingtalkEnabled = decryptedExisting?.dingtalkEnabled ?? false;
+
+  const feishuReady = isFeishuChannelConfigured(
+    feishuWebhookUrl,
+    feishuAtId,
+    feishuEnabled,
+    emailAddress,
+  );
+  const larkReady = isLarkChannelConfigured(
+    larkWebhookUrl,
+    larkAtId,
+    larkEnabled,
+    emailAddress,
+  );
+  const dingtalkReady = isDingTalkChannelConfigured(
+    dingtalkWebhookUrl,
+    dingtalkAtId,
+  );
 
   if (!emailEnabled) {
     ruleCascade.emailEnabled = false;
@@ -463,6 +756,18 @@ export async function updateNotificationPreferences(
 
   if (!webhookEnabled || !webhookUrl) {
     ruleCascade.webhookEnabled = false;
+  }
+
+  if (!feishuEnabled || !feishuReady) {
+    ruleCascade.feishuEnabled = false;
+  }
+
+  if (!larkEnabled || !larkReady) {
+    ruleCascade.larkEnabled = false;
+  }
+
+  if (!dingtalkEnabled || !dingtalkReady) {
+    ruleCascade.dingtalkEnabled = false;
   }
 
   if (emailEnabled && !hadEmailEnabled && emailAddress) {
@@ -484,6 +789,18 @@ export async function updateNotificationPreferences(
 
   if (webhookEnabled && !hadWebhookEnabled && webhookUrl) {
     enabledRuleCascade.webhookEnabled = true;
+  }
+
+  if (feishuEnabled && !hadFeishuEnabled && feishuReady) {
+    enabledRuleCascade.feishuEnabled = true;
+  }
+
+  if (larkEnabled && !hadLarkEnabled && larkReady) {
+    enabledRuleCascade.larkEnabled = true;
+  }
+
+  if (dingtalkEnabled && !hadDingtalkEnabled && dingtalkReady) {
+    enabledRuleCascade.dingtalkEnabled = true;
   }
 
   const ruleEnableCascade = Object.fromEntries(
@@ -510,6 +827,9 @@ export async function updateNotificationPreferences(
             eq(userNotificationWorkspaceRuleTable.ntfyEnabled, true),
             eq(userNotificationWorkspaceRuleTable.gotifyEnabled, true),
             eq(userNotificationWorkspaceRuleTable.webhookEnabled, true),
+            eq(userNotificationWorkspaceRuleTable.feishuEnabled, true),
+            eq(userNotificationWorkspaceRuleTable.larkEnabled, true),
+            eq(userNotificationWorkspaceRuleTable.dingtalkEnabled, true),
           ),
         ),
       );
@@ -583,6 +903,49 @@ export async function upsertWorkspaceRule(
     });
   }
 
+  if (
+    input.feishuEnabled &&
+    (!preference?.feishuEnabled ||
+      !isFeishuChannelConfigured(
+        preference.feishuWebhookUrl,
+        preference.feishuAtId,
+        preference.feishuEnabled,
+        emailAddress,
+      ))
+  ) {
+    throw new HTTPException(400, {
+      message: "Enable Feishu notifications globally before using them here",
+    });
+  }
+
+  if (
+    input.larkEnabled &&
+    (!preference?.larkEnabled ||
+      !isLarkChannelConfigured(
+        preference.larkWebhookUrl,
+        preference.larkAtId,
+        preference.larkEnabled,
+        emailAddress,
+      ))
+  ) {
+    throw new HTTPException(400, {
+      message: "Enable Lark notifications globally before using them here",
+    });
+  }
+
+  if (
+    input.dingtalkEnabled &&
+    (!preference?.dingtalkEnabled ||
+      !isDingTalkChannelConfigured(
+        preference.dingtalkWebhookUrl,
+        preference.dingtalkAtId,
+      ))
+  ) {
+    throw new HTTPException(400, {
+      message: "Enable DingTalk notifications globally before using them here",
+    });
+  }
+
   const existing = await db.query.userNotificationWorkspaceRuleTable.findFirst({
     where: and(
       eq(userNotificationWorkspaceRuleTable.userId, userId),
@@ -601,6 +964,9 @@ export async function upsertWorkspaceRule(
         ntfyEnabled: input.ntfyEnabled,
         gotifyEnabled: input.gotifyEnabled,
         webhookEnabled: input.webhookEnabled,
+        feishuEnabled: input.feishuEnabled ?? false,
+        larkEnabled: input.larkEnabled ?? false,
+        dingtalkEnabled: input.dingtalkEnabled ?? false,
         projectMode: input.projectMode,
         updatedAt: new Date(),
       })
@@ -616,6 +982,9 @@ export async function upsertWorkspaceRule(
         ntfyEnabled: input.ntfyEnabled,
         gotifyEnabled: input.gotifyEnabled,
         webhookEnabled: input.webhookEnabled,
+        feishuEnabled: input.feishuEnabled ?? false,
+        larkEnabled: input.larkEnabled ?? false,
+        dingtalkEnabled: input.dingtalkEnabled ?? false,
         projectMode: input.projectMode,
       })
       .returning({ id: userNotificationWorkspaceRuleTable.id });

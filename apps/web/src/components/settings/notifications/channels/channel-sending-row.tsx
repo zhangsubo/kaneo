@@ -7,6 +7,9 @@ import { useUpdateNotificationPreferences } from "@/hooks/mutations/notification
 import type { ExternalChannelId } from "../notification-channels";
 
 const ENABLED_KEYS = {
+  feishu: "feishuEnabled",
+  lark: "larkEnabled",
+  dingtalk: "dingtalkEnabled",
   gotify: "gotifyEnabled",
   ntfy: "ntfyEnabled",
   webhook: "webhookEnabled",

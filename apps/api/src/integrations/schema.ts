@@ -11,6 +11,11 @@ export const integrationEventToggles = z.object({
   taskCommentCreated: z.boolean().optional(),
 });
 
+export const imIntegrationEventToggles = integrationEventToggles.extend({
+  taskAssigneeChanged: z.boolean().optional(),
+  taskDueDateChanged: z.boolean().optional(),
+});
+
 export const genericWebhookEventToggles = integrationEventToggles.extend({
   taskDeleted: z.boolean().optional(),
   taskMoved: z.boolean().optional(),

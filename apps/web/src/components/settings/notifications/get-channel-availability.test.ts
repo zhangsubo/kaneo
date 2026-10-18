@@ -10,6 +10,12 @@ const base = {
   ntfyEnabled: false,
   webhookConfigured: true,
   webhookEnabled: true,
+  feishuConfigured: true,
+  feishuEnabled: true,
+  larkConfigured: false,
+  larkEnabled: false,
+  dingtalkConfigured: true,
+  dingtalkEnabled: false,
 };
 
 describe("getChannelAvailability", () => {
@@ -19,6 +25,9 @@ describe("getChannelAvailability", () => {
       gotify: "notConnected",
       ntfy: "paused",
       webhook: "available",
+      feishu: "available",
+      lark: "notConnected",
+      dingtalk: "paused",
     });
   });
 

@@ -30,6 +30,9 @@ const availability: ChannelAvailabilityMap = {
   gotify: "available",
   ntfy: "paused",
   webhook: "notConnected",
+  feishu: "notConnected",
+  lark: "notConnected",
+  dingtalk: "notConnected",
 };
 
 const rule: WorkspaceRule = {
@@ -38,6 +41,9 @@ const rule: WorkspaceRule = {
   gotifyEnabled: true,
   ntfyEnabled: false,
   webhookEnabled: false,
+  feishuEnabled: false,
+  larkEnabled: false,
+  dingtalkEnabled: false,
   projectMode: "all",
   selectedProjectIds: [],
 };

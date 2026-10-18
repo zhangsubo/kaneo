@@ -13,9 +13,25 @@ import {
 } from "../database/schema";
 import { canReceiveResourceNotification } from "../notification/resource-access";
 import {
+  buildDingTalkMarkdownPayload,
+  sendDingTalkWebhook,
+} from "../plugins/dingtalk/sender";
+import {
+  buildFeishuInteractiveCard,
+  sendFeishuWebhook,
+} from "../plugins/feishu-shared/sender";
+import {
   safeOutboundError,
   sendOutboundRequest,
 } from "../utils/outbound-request";
+import {
+  isDingTalkAppConfigured,
+  sendDingTalkAppDirectMessage,
+} from "./open-platform/dingtalk-app-client";
+import {
+  isFeishuAppConfigured,
+  sendFeishuAppDirectMessage,
+} from "./open-platform/feishu-app-client";
 import { resolveEmailTask } from "./resolve-email-task";
 import { decryptSecret } from "./secrets";
 
@@ -406,6 +422,9 @@ export async function deliverNotification(
     ntfyToken: decryptSecret(preference.ntfyToken),
     gotifyToken: decryptSecret(preference.gotifyToken),
     webhookSecret: decryptSecret(preference.webhookSecret),
+    feishuSecret: decryptSecret(preference.feishuSecret),
+    larkSecret: decryptSecret(preference.larkSecret),
+    dingtalkSecret: decryptSecret(preference.dingtalkSecret),
   };
 
   const rule = await db.query.userNotificationWorkspaceRuleTable.findFirst({
@@ -548,6 +567,122 @@ export async function deliverNotification(
         payload: webhookPayload,
       }),
     );
+  }
+
+  const cardFields = [
+    { label: "Workspace", value: context.workspaceName },
+    ...(context.projectName
+      ? [{ label: "Project", value: context.projectName }]
+      : []),
+    ...(context.taskTitle ? [{ label: "Task", value: context.taskTitle }] : []),
+  ];
+
+  if (decryptedPreference.feishuEnabled && rule.feishuEnabled) {
+    if (decryptedPreference.feishuWebhookUrl) {
+      const card = buildFeishuInteractiveCard({
+        title: content.title,
+        body: content.body,
+        fields: cardFields,
+        actionUrl: context.taskUrl,
+        atId: decryptedPreference.feishuAtId,
+      });
+      deliveries.push(
+        sendFeishuWebhook({
+          webhookUrl: decryptedPreference.feishuWebhookUrl,
+          secret: decryptedPreference.feishuSecret,
+          card,
+        }),
+      );
+    } else if (
+      isFeishuAppConfigured("feishu") &&
+      (decryptedPreference.feishuAtId || user.email)
+    ) {
+      const card = buildFeishuInteractiveCard({
+        title: content.title,
+        body: content.body,
+        fields: cardFields,
+        actionUrl: context.taskUrl,
+      });
+      deliveries.push(
+        sendFeishuAppDirectMessage({
+          platform: "feishu",
+          atId: decryptedPreference.feishuAtId,
+          userEmail: user.email,
+          card,
+        }),
+      );
+    }
+  }
+
+  if (decryptedPreference.larkEnabled && rule.larkEnabled) {
+    if (decryptedPreference.larkWebhookUrl) {
+      const card = buildFeishuInteractiveCard({
+        title: content.title,
+        body: content.body,
+        fields: cardFields,
+        actionUrl: context.taskUrl,
+        atId: decryptedPreference.larkAtId,
+      });
+      deliveries.push(
+        sendFeishuWebhook({
+          webhookUrl: decryptedPreference.larkWebhookUrl,
+          secret: decryptedPreference.larkSecret,
+          card,
+        }),
+      );
+    } else if (
+      isFeishuAppConfigured("lark") &&
+      (decryptedPreference.larkAtId || user.email)
+    ) {
+      const card = buildFeishuInteractiveCard({
+        title: content.title,
+        body: content.body,
+        fields: cardFields,
+        actionUrl: context.taskUrl,
+      });
+      deliveries.push(
+        sendFeishuAppDirectMessage({
+          platform: "lark",
+          atId: decryptedPreference.larkAtId,
+          userEmail: user.email,
+          card,
+        }),
+      );
+    }
+  }
+
+  if (decryptedPreference.dingtalkEnabled && rule.dingtalkEnabled) {
+    if (decryptedPreference.dingtalkWebhookUrl) {
+      const payload = buildDingTalkMarkdownPayload({
+        title: content.title,
+        body: content.body,
+        fields: cardFields,
+        actionUrl: context.taskUrl,
+        atId: decryptedPreference.dingtalkAtId,
+      });
+      deliveries.push(
+        sendDingTalkWebhook({
+          webhookUrl: decryptedPreference.dingtalkWebhookUrl,
+          secret: decryptedPreference.dingtalkSecret,
+          payload,
+        }),
+      );
+    } else if (isDingTalkAppConfigured() && decryptedPreference.dingtalkAtId) {
+      const payload = buildDingTalkMarkdownPayload({
+        title: content.title,
+        body: content.body,
+        fields: cardFields,
+        actionUrl: context.taskUrl,
+      });
+      const markdown = payload.markdown as { title: string; text: string };
+      deliveries.push(
+        sendDingTalkAppDirectMessage({
+          atId: decryptedPreference.dingtalkAtId,
+          title: markdown.title,
+          markdownText: markdown.text,
+        }),
+      );
+    }
   }
 
   const results = await Promise.allSettled(deliveries);

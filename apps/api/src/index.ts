@@ -40,9 +40,11 @@ import {
 } from "./errors/validation-error";
 import { prepareDatabaseStartup } from "./database/prepare-database-startup";
 import { waitForDatabase } from "./database/wait-for-database";
+import dingtalkIntegration from "./dingtalk-integration";
 import discordIntegration from "./discord-integration";
 import { eventContext } from "./events";
 import externalLink from "./external-link";
+import feishuIntegration from "./feishu-integration";
 import genericWebhookIntegration from "./generic-webhook-integration";
 import giteaIntegration, { handleGiteaWebhookRoute } from "./gitea-integration";
 import githubIntegration, {
@@ -56,6 +58,7 @@ import { stopActiveImports } from "./import/runs/stop-active-imports";
 import getInstanceStatus from "./instance/controllers/get-instance-status";
 import invitation from "./invitation";
 import label from "./label";
+import larkIntegration from "./lark-integration";
 import mattermostIntegration from "./mattermost-integration";
 import mcpRoutes, { mcpWellKnownRoutes } from "./mcp";
 import { migrateColumns } from "./migrations/column-migration";
@@ -867,6 +870,15 @@ export function createApp() {
     "/telegram-integration",
     telegramIntegration,
   );
+  const feishuIntegrationApi = api.route(
+    "/feishu-integration",
+    feishuIntegration,
+  );
+  const larkIntegrationApi = api.route("/lark-integration", larkIntegration);
+  const dingtalkIntegrationApi = api.route(
+    "/dingtalk-integration",
+    dingtalkIntegration,
+  );
   const taskRelationApi = api.route("/task-relation", taskRelation);
   const externalLinkApi = api.route("/external-link", externalLink);
   const workflowRuleApi = api.route("/workflow-rule", workflowRule);
@@ -999,6 +1011,9 @@ export function createApp() {
     taskApi,
     taskRelationApi,
     telegramIntegrationApi,
+    feishuIntegrationApi,
+    larkIntegrationApi,
+    dingtalkIntegrationApi,
     timeEntryApi,
     userApi,
     adminApi,
@@ -1132,6 +1147,9 @@ const {
   taskApi,
   taskRelationApi,
   telegramIntegrationApi,
+  feishuIntegrationApi,
+  larkIntegrationApi,
+  dingtalkIntegrationApi,
   timeEntryApi,
   userApi,
   adminApi,
@@ -1175,6 +1193,9 @@ export type AppType =
   | typeof mattermostIntegrationApi
   | typeof slackIntegrationApi
   | typeof telegramIntegrationApi
+  | typeof feishuIntegrationApi
+  | typeof larkIntegrationApi
+  | typeof dingtalkIntegrationApi
   | typeof taskRelationApi
   | typeof externalLinkApi
   | typeof workflowRuleApi

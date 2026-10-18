@@ -8,6 +8,12 @@ type ChannelPreferences = Pick<
   NotificationPreferences,
   | "emailAddress"
   | "emailEnabled"
+  | "feishuConfigured"
+  | "feishuEnabled"
+  | "larkConfigured"
+  | "larkEnabled"
+  | "dingtalkConfigured"
+  | "dingtalkEnabled"
   | "gotifyConfigured"
   | "gotifyEnabled"
   | "ntfyConfigured"
@@ -17,8 +23,8 @@ type ChannelPreferences = Pick<
 >;
 
 function getExternalAvailability(
-  configured: boolean,
-  enabled: boolean,
+  configured: boolean | undefined,
+  enabled: boolean | undefined,
 ): ChannelAvailability {
   if (!configured) return "notConnected";
   return enabled ? "available" : "paused";
@@ -33,6 +39,18 @@ export function getChannelAvailability(
       : preferences.emailEnabled
         ? "available"
         : "off",
+    feishu: getExternalAvailability(
+      preferences.feishuConfigured,
+      preferences.feishuEnabled,
+    ),
+    lark: getExternalAvailability(
+      preferences.larkConfigured,
+      preferences.larkEnabled,
+    ),
+    dingtalk: getExternalAvailability(
+      preferences.dingtalkConfigured,
+      preferences.dingtalkEnabled,
+    ),
     gotify: getExternalAvailability(
       preferences.gotifyConfigured,
       preferences.gotifyEnabled,

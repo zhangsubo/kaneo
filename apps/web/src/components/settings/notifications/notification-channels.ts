@@ -1,4 +1,10 @@
-export type ExternalChannelId = "gotify" | "ntfy" | "webhook";
+export type ExternalChannelId =
+  | "gotify"
+  | "ntfy"
+  | "webhook"
+  | "feishu"
+  | "lark"
+  | "dingtalk";
 
 export type NotificationChannelId = "email" | ExternalChannelId;
 
@@ -15,6 +21,9 @@ export type ChannelAvailabilityMap = Record<
 
 export const NOTIFICATION_CHANNELS: NotificationChannelId[] = [
   "email",
+  "feishu",
+  "lark",
+  "dingtalk",
   "gotify",
   "ntfy",
   "webhook",
@@ -22,6 +31,9 @@ export const NOTIFICATION_CHANNELS: NotificationChannelId[] = [
 
 export const CHANNEL_NAME_KEYS: Record<NotificationChannelId, string> = {
   email: "settings:notificationsPage.emailTitle",
+  feishu: "settings:notificationsPage.feishuTitle",
+  lark: "settings:notificationsPage.larkTitle",
+  dingtalk: "settings:notificationsPage.dingtalkTitle",
   gotify: "settings:notificationsPage.gotifyTitle",
   ntfy: "settings:notificationsPage.ntfyTitle",
   webhook: "settings:notificationsPage.webhookTitle",

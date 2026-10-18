@@ -1,6 +1,8 @@
 import { isSmtpConfigured } from "@kaneo/email";
 import { config } from "dotenv-mono";
 import { isBillingEnabled } from "../billing/config";
+import { isDingTalkAppConfigured } from "../notification-preferences/open-platform/dingtalk-app-client";
+import { isFeishuAppConfigured } from "../notification-preferences/open-platform/feishu-app-client";
 import { isStorageConfigured } from "../storage/s3";
 import { resolveFileSecret } from "./file-secret";
 import { isGithubSsoConfigured } from "./github-sso-env";
@@ -40,6 +42,9 @@ function getSettings() {
     customOAuthAutoLogin: process.env.CUSTOM_OAUTH_AUTO_LOGIN === "true",
     customOAuthLogoutUrl: process.env.CUSTOM_OAUTH_LOGOUT_URL || null,
     billingEnabled: isBillingEnabled(),
+    hasFeishuApp: isFeishuAppConfigured("feishu"),
+    hasLarkApp: isFeishuAppConfigured("lark"),
+    hasDingtalkApp: isDingTalkAppConfigured(),
   };
 }
 

@@ -1652,7 +1652,42 @@
 			"stopSendingDescription": "Powiadomienia z tego obszaru roboczego będą widoczne tylko w Kaneo.",
 			"stopSendingTitle": "Zatrzymać wysyłanie z {{workspaceName}}?",
 			"workspacesDescription": "Wybierz, które obszary robocze i projekty mogą korzystać z Twoich kanałów.",
-			"workspacesTitle": "Obszary robocze"
+			"workspacesTitle": "Obszary robocze",
+			"dingtalkAtIdHint": "Used to @mention you in group bot messages (mobile number or UserId) or match your account in 1-on-1 app messages.",
+			"dingtalkAtIdLabel": "DingTalk Mobile / UserId",
+			"dingtalkAtIdPlaceholder": "13800138000 or manager123",
+			"dingtalkDescription": "Send notifications to a DingTalk group bot or 1-on-1 enterprise app.",
+			"dingtalkTitle": "DingTalk",
+			"dingtalkWebhookUrlPlaceholder": "https://oapi.dingtalk.com/robot/send?access_token=...",
+			"feishuAtIdHint": "Used to @mention you in group bot cards (requires Open ID) or match your account in 1-on-1 app messages.",
+			"feishuAtIdLabel": "Feishu Open ID / User ID / Email",
+			"feishuAtIdPlaceholder": "ou_xxx or user@example.com",
+			"feishuDescription": "Send notifications to a Feishu group bot or 1-on-1 enterprise app.",
+			"feishuTitle": "Feishu",
+			"feishuWebhookUrlPlaceholder": "https://open.feishu.cn/open-apis/bot/v2/hook/...",
+			"imBotAppModeHint": "Enterprise 1-on-1 bot is enabled on this server. You can leave Webhook URL empty to receive direct messages (matched by your account email or identifier below), or paste a custom bot Webhook URL.",
+			"imBotSecretHint": "Optional signing secret for custom bot signature verification.",
+			"larkAtIdHint": "Used to @mention you in group bot cards (requires Open ID) or match your account in 1-on-1 app messages.",
+			"larkAtIdLabel": "Lark Open ID / User ID / Email",
+			"larkAtIdPlaceholder": "ou_xxx or user@example.com",
+			"larkDescription": "Send notifications to a Lark group bot or 1-on-1 enterprise app.",
+			"larkTitle": "Lark",
+			"larkWebhookUrlPlaceholder": "https://open.larksuite.com/open-apis/bot/v2/hook/...",
+			"toastDingtalkDisconnected": "DingTalk disconnected",
+			"toastDingtalkDisconnectFailed": "Failed to disconnect DingTalk",
+			"toastDingtalkSaved": "DingTalk settings saved",
+			"toastDingtalkSaveFailed": "Failed to save DingTalk settings",
+			"toastFeishuDisconnected": "Feishu disconnected",
+			"toastFeishuDisconnectFailed": "Failed to disconnect Feishu",
+			"toastFeishuSaved": "Feishu settings saved",
+			"toastFeishuSaveFailed": "Failed to save Feishu settings",
+			"toastLarkDisconnected": "Lark disconnected",
+			"toastLarkDisconnectFailed": "Failed to disconnect Lark",
+			"toastLarkSaved": "Lark settings saved",
+			"toastLarkSaveFailed": "Failed to save Lark settings",
+			"connectDingtalk": "Connect DingTalk",
+			"connectFeishu": "Connect Feishu",
+			"connectLark": "Connect Lark"
 		},
 		"preferences": "Preferencje",
 		"preferencesPage": {
@@ -1773,7 +1808,13 @@
 			"statusPaused": "Wstrzymano",
 			"connect": "Połącz",
 			"configure": "Konfiguruj",
-			"done": "Gotowe"
+			"done": "Gotowe",
+			"dingtalkSectionSubtitle": "Send project task updates into a DingTalk group chat with a custom bot.",
+			"dingtalkSectionTitle": "DingTalk",
+			"feishuSectionSubtitle": "Send project task updates into a Feishu group chat with a custom bot.",
+			"feishuSectionTitle": "Feishu",
+			"larkSectionSubtitle": "Send project task updates into a Lark group chat with a custom bot.",
+			"larkSectionTitle": "Lark"
 		},
 		"projectSwitcher": {
 			"noProjects": "Brak projektów",
@@ -3065,7 +3106,9 @@
 				"taskDescriptionChanged": "Zmieni się opis",
 				"taskPriorityChanged": "Zmieni się priorytet",
 				"taskStatusChanged": "Zmieni się status",
-				"taskTitleChanged": "Zmieni się tytuł"
+				"taskTitleChanged": "Zmieni się tytuł",
+				"taskAssigneeChanged": "Assignee changes",
+				"taskDueDateChanged": "Due date changes"
 			},
 			"optional": "Opcjonalne",
 			"postWhen": "Publikuj, gdy",
@@ -3126,6 +3169,69 @@
 		},
 		"shared": {
 			"autosave": "Zmiany zapisują się automatycznie"
+		},
+		"dingtalkIntegration": {
+			"connect": "Connect DingTalk",
+			"secretHint": "If 'Additional Signature' (SEC...) is enabled on the DingTalk bot, paste it here.",
+			"secretHintConfigured": "Current secret: {{secret}}. Paste a new one to replace it.",
+			"secretLabel": "Signing secret",
+			"secretPlaceholder": "SEC...",
+			"toast": {
+				"disabled": "DingTalk notifications paused",
+				"enabled": "DingTalk notifications enabled",
+				"removed": "DingTalk integration removed successfully",
+				"removeError": "Failed to remove DingTalk integration",
+				"saved": "DingTalk integration saved successfully",
+				"saveError": "Failed to save DingTalk integration",
+				"updateError": "Failed to update DingTalk integration"
+			},
+			"validation": {
+				"webhookInvalid": "Enter a valid DingTalk webhook URL (oapi.dingtalk.com)"
+			},
+			"webhookHint": "Add a Custom Webhook Bot in your DingTalk group settings and paste its URL here.",
+			"webhookPlaceholder": "https://oapi.dingtalk.com/robot/send?access_token=..."
+		},
+		"feishuIntegration": {
+			"connect": "Connect Feishu",
+			"secretHint": "If signature verification is enabled on the Feishu bot, paste its secret here.",
+			"secretHintConfigured": "Current secret: {{secret}}. Paste a new one to replace it.",
+			"secretLabel": "Signing secret",
+			"secretPlaceholder": "Optional signing secret",
+			"toast": {
+				"disabled": "Feishu notifications paused",
+				"enabled": "Feishu notifications enabled",
+				"removed": "Feishu integration removed successfully",
+				"removeError": "Failed to remove Feishu integration",
+				"saved": "Feishu integration saved successfully",
+				"saveError": "Failed to save Feishu integration",
+				"updateError": "Failed to update Feishu integration"
+			},
+			"validation": {
+				"webhookInvalid": "Enter a valid Feishu webhook URL (open.feishu.cn)"
+			},
+			"webhookHint": "Add a Custom Bot in your Feishu group settings and paste its webhook URL here.",
+			"webhookPlaceholder": "https://open.feishu.cn/open-apis/bot/v2/hook/..."
+		},
+		"larkIntegration": {
+			"connect": "Connect Lark",
+			"secretHint": "If signature verification is enabled on the Lark bot, paste its secret here.",
+			"secretHintConfigured": "Current secret: {{secret}}. Paste a new one to replace it.",
+			"secretLabel": "Signing secret",
+			"secretPlaceholder": "Optional signing secret",
+			"toast": {
+				"disabled": "Lark notifications paused",
+				"enabled": "Lark notifications enabled",
+				"removed": "Lark integration removed successfully",
+				"removeError": "Failed to remove Lark integration",
+				"saved": "Lark integration saved successfully",
+				"saveError": "Failed to save Lark integration",
+				"updateError": "Failed to update Lark integration"
+			},
+			"validation": {
+				"webhookInvalid": "Enter a valid Lark webhook URL (open.larksuite.com)"
+			},
+			"webhookHint": "Add a Custom Bot in your Lark group settings and paste its webhook URL here.",
+			"webhookPlaceholder": "https://open.larksuite.com/open-apis/bot/v2/hook/..."
 		}
 	},
 	"tasks": {
